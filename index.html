@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>// marginalia</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      :root {
+        --title-height: 5rem;
+        --header-gap: 20px;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.05) 2px, transparent 2px),
+          linear-gradient(135deg, #9c7bb3 0%, #b67aa9 40%, #e3a07a 100%);
+        background-size: 100% 8px, 100% 100%;
+        min-height: 100vh;
+        font-family: Georgia, serif;
+        display: flex;
+        flex-direction: column;
+        transition: background 0.5s ease; 
+      }
+
+      body.alt-sky {
+        background:
+          linear-gradient(rgba(255, 255, 255, 0.05) 2px, transparent 2px),
+          linear-gradient(135deg, #0f0c20 0%, #15102a 50%, #06040a 100%);
+      }
+
+      /* --- Layout Framework --- */
+      .layout-wrapper {
+        display: flex;
+        max-width: 1100px;
+        width: 100%;
+        margin-left: 40px;
+        margin-right: auto;
+        padding: 40px 20px;
+        flex: 1;
+        align-items: flex-start;
+      }
+
+      .sidebar {
+        width: 220px;
+        position: -webkit-sticky;
+        position: sticky;
+        top: 40px;
+        background: linear-gradient(135deg, #ff8da1, #ffb07c, #ffeb99, #a3e6bb, #94d0ff, #d1b3ff);
+        padding: 20px 0;
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        border: 2px solid darkslateblue;
+        z-index: 10;
+        /* line up with the top of the intro box */
+        margin-top: calc(var(--title-height) + var(--header-gap));
+      }
+
+      .sidebar a {
+        padding: 12px 20px;
+        text-decoration: none;
+        font-size: 16px;
+        color: #2b2b2b;
+        font-weight: bold;
+        display: block;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .sidebar a:hover {
+        color: #000000;
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 6px;
+        margin: 0 10px;
+        padding-left: 14px;
+        box-shadow: 0 0 12px rgba(255, 255, 255, 0.4);
+      }
+
+      .main-content {
+        flex: 1;
+        max-width: 800px;
+        margin-left: 40px;
+        margin-right: 40px;
+      }
+
+      header {
+        color: #000000;
+        text-align: center;
+        margin-bottom: var(--header-gap);
+      }
+
+      h1 {
+        font-family: Georgia, sans-serif;
+        text-align: center;
+        color: white;
+      }
+      
+      ul, ol {
+        padding-left: 30px;
+        margin-top: 10px;
+      }
+
+      li {
+        margin-bottom: 4px;
+      }
+
+      .intro {
+        background-color: rgba(253, 251, 247, 0.94);
+        color: #1a1a1a;
+        border: 2px solid darkslateblue;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 40px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+        text-align: center;
+      }
+
+      .blog-container {
+        background-color: rgba(253, 251, 247, 0.94);
+        border: 2px solid darkslateblue;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        scroll-margin-top: 40px;
+      }
+
+      .sky-button {
+        border: none;
+        color: white;
+        border-radius: 12px;
+        padding: 10px 15px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 14px;
+        margin: 10px 2px 2px 2px;
+        cursor: pointer;
+        font-family: sans-serif;
+        transition: all 0.3s ease-in-out;
+      }
+
+      .sky-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 0 15px rgba(217, 83, 15, 0.6), 0 0 25px rgba(118, 37, 107, 0.4) !important;
+      }
+
+      .button-pastel-rainbow {
+        background: linear-gradient(135deg, #ff8da1, #ffb07c, #ffeb99, #a3e6bb, #94d0ff, #d1b3ff);
+        color: #2b2b2b !important;
+        text-shadow: none;
+        font-weight: bold;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+      }
+
+      .rainbow-divider {
+        border: 0;
+        height: 4px;
+        border-radius: 2px;
+        background: linear-gradient(to right, #ff8da1, #ffb07c, #ffeb99, #a3e6bb, #94d0ff, #d1b3ff);
+        margin: 20px 0;
+      }
+
+      .more-prompts {
+        margin-top: 12px;
+        font-size: 0.9rem;
+      }
+
+      .more-prompts a {
+        color: #76256b;
+        font-weight: bold;
+      }
+
+      .more-prompts a:hover {
+        color: #c44d12;
+      }
+
+      .prompt-display-box {
+        background: transparent;
+        padding: 12px;
+        margin: 15px auto 0 auto;
+        max-width: 500px;
+        border-radius: 4px;
+        display: none;
+        color: #2b2b2b;
+        text-align: center;
+      }
+
+      article p {
+        text-align: justify;
+        margin-top: 10px;
+      }
+
+      .post-meta {
+        font-size: 0.85rem;
+        color: #666;
+        font-style: italic;
+      }
+
+      .rainbow-text {
+        font-size: 4rem;
+        font-weight: bold;
+        line-height: var(--title-height);
+        letter-spacing: 2px;
+        background: linear-gradient(
+            to right,
+            #ff8da1, #ffb07c, #ffeb99, #a3e6bb, #94d0ff, #d1b3ff, #ff8da1
+        );
+        background-size: 200% auto;
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        filter: drop-shadow(0 2px 3px rgba(0, 0, 0, 0.35));
+        animation: rainbow-slide 8s linear infinite;
+      }
+
+      @keyframes rainbow-slide {
+        from { background-position: 0% 0%; }
+        to   { background-position: 200% 0%; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        .rainbow-text {
+          animation: none;
+        }
+      }
+
+      footer {
+        background-color: transparent;
+        text-align: center;
+        padding: 20px 0;
+        margin-top: auto;
+        width: 100%;
+        font-size: 0.9rem;
+        color: white;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+      }
+
+      /* mobile */
+      @media (max-width: 768px) {
+        .layout-wrapper {
+          flex-direction: column;
+          margin: 0;
+          padding: 15px;
+        }
+
+        .sidebar {
+          width: 100%;
+          position: static;
+          margin-top: 10px;
+          margin-bottom: 20px;
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          padding: 10px;
+        }
+
+        .sidebar a {
+          padding: 8px 12px;
+          font-size: 15px;
+        }
+
+        .sidebar a:hover {
+          margin: 0 5px;
+          padding-left: 12px;
+        }
+
+        .main-content {
+          margin-left: 0;
+          margin-right: 0;
+          width: 100%;
+        }
+        
+        .sidebar .back-to-top {
+          display: none;
+        }
+
+        .rainbow-text {
+          font-size: 2.5rem;
+          line-height: 3rem;
+        }
+
+        article p {
+          text-align: left;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="layout-wrapper">
+
+      <aside class="sidebar">
+        <a href="#dear-brain">Dear Brain</a>
+        <a href="#bad-business">Terrible Business Ideas</a>
+        <a href="#perfectly-clear">Perfectly Clear</a>
+        <a href="#writing">Writing Prompts</a>
+        <a href="#why">Why?</a>
+        <hr class="rainbow-divider back-to-top" style="margin: 10px 20px;">
+        <a href="#" class="back-to-top">Back to the Top</a>
+      </aside>
+
+      <div class="main-content">
+        <header>
+          <h1 class="rainbow-text" id="moving-text">// marginalia</h1>
+        </header>
+
+        <div class="intro">
+          <p id="greeting"><strong>Omg you found my website!</strong></p>
+          <br>
+          <p>Today is: <span id="today"></span> &#x1F525;</p>
+          <br>
+          <p>This is really just an unglorified blog + prompt posting site for now.</p>
+
+      
+      <!--    <p style="margin-top: 10px;">By the way, we can change it up a bit:
+            <button class="sky-button button-pastel-rainbow" onclick="changeSky()">Toggle the background!</button>
+          </p> -->
+
+          <!--
+          <p style="margin-top: 15px;">Join me in my writing journey!
+            <a href="https://thenarrativearc.org" class="sky-button button-pastel-rainbow">Writing prompts</a>
+          </p>
+          -->
+
+          <hr class="rainbow-divider">
+          <p>Need inspiration right now?</p>
+          <button class="sky-button button-pastel-rainbow" onclick="generatePrompt()">Generate Prompt</button>
+          <div id="promptBox" class="prompt-display-box"></div>
+          <p class="more-prompts"><a href="https://thenarrativearc.org/writing-prompts">Want more prompts?</a></p>
+        </div>
+        
+        <div class="blog-container" id="dear-brain">
+          <article>
+            <h2>Dear Brain</h2>
+            <p class="post-meta">Published on Oct. 17, 2026</p>
+            <p><strong>Prompt:</strong> Write a formal complaint letter to your brain for keeping you up. </p>
+            <p> To: The Brain<br>
+                From: The rest of the Body<br>
+                Date: October 17th, 2026 at 3:42AM<br>
+                Re: Formal Complaint Regarding Ongoing Sleep Issue
+            </p>
+            <p>To whom it may concern (you, it's YOU!),</p>
+            <p>I'm writing to formally express my concern about your conduct during what most people call "sleeping hours" and what you seem to treat as "time to dwell on various thoughts and/or cringe-worthy experiences from 20 years ago."</p>
+            <p>Last night at approximately 11:04PM, the Body completed every agreed-upon step of the bedtime process. Teeth were brushed and flossed. The lights were turned off. The pillow was flipped to the cool side. The phone was nowhere in the room.</p>
+            <p>At 11:06PM, you chose to bring up a conversation from 2014 that, for the record, everyone else had forgotten.</p>
+            <p>For what it's worth, this is not an isolated incident. Over the past several weeks, I have documented the following violations:</p>
+                <ul>
+                  <li>12:32AM on Oct. 14th: A full mental rehearsal of a conversation that never happened and probably never will.</li>
+                  <li>1:10AM on Oct. 11th: A sudden fascination with probabilistic roadmap algorithms.</li>
+                  <li>2:13AM also on Oct. 11th: The realization that everything in life is ephemeral, including the lives of myself and my loved ones, totally unprompted.</li>
+                  <li>12:15AM on Oct. 7th: Remembering that earlier in the day, the server in a restaurant told me to enjoy my meal, and I responded with "You too!"</li>
+                </ul>
+            <p>In light of the above, the Body is requesting the following:</p>
+            <ol>
+              <li>All thoughts about the past must be submitted in writing during business hours (9AM to 5PM) and will be reviewed in the order they were received.</li>
+              <li>Existential questions are limited to one per night, and only when they come with a solution.</li>
+              <li>Song lyrics may no longer be played on a loop after midnight, especially when you only know one line.</li>
+              <li>Absolutely no more dwelling on anything that happened more than 10 years ago!!</li>
+            </ol>
+            <p>Please understand that the Body is prepared to take further action if these terms are not met. That includes, but isn't limited to, a fourth cup of coffee, a 2PM nap that ruins everything, and telling everyone we "slept fine, totally ok, don't worry about it, thanks."</p>
+            <p>Sincerely,<br>
+            The (<em>very tired</em>) Body</p>
+          </article>
+        </div>
+        
+        <div class="blog-container" id="bad-business">
+          <article>
+            <h2>Terrible Business Ideas</h2>
+            <p class="post-meta">Published on Oct. 16, 2026</p>
+              <p> <strong>Prompt:</strong> Crazy/terrible business ideas.<br>
+              <br>For this one, I just wanted a place to dump some of my truly awful ideas. </p>
+              <ul style="list-style-type:circle;">
+                <li>Anti-social social media</li>
+                <li>Crowd sourced mental health diagnoses</li>
+                <li>LOAF: The bread-sharing economy (like Uber, but for bread you haven't finished yet)</li>
+                <li>NFT receipts for groceries and bills (your bread purchase stays on the blockchain <em>forever</em>)</li>
+                <li>"Smart" underwear - just in case you missed something..</li>
+                <li>Hand-delivered emails. Like an old-fashioned telegram where the email is printed out and read to you at your door</li>
+                <li>Meditation app that asks you every 5 minutes "Are you relaxed yet?"</li>
+                <li><em>Luxury</em> bottled air</li>
+                <li>Self-help books on how to read more, for people who don't like to read</li>
+                <li>Pizza-Hut themed dance club in one of many abandoned former Pizza Hut buildings</li>
+                <li>A toaster with a touchscreen</li>
+                <li>Monthly sock subscription, but only one sock a month. Takes two months to get a pair</li>
+                <li>Concierge for opening jars. Guaranteed jar opener arrives at your house within 90 minutes</li>
+                <li>Rideshare, but just for your luggage</li>
+                <li>Artisanal toothpicks (handmade, $40, single use)</li>
+                <li>Slow-cooked fast food restaurant. Your order takes 9 hours to cook</li>
+                <li>Blockchain for food. Trace your burger from cow to plate</li>
+                <li>Egg peeling mail service (send in your eggs, they come back fully peeled within 5-7 business days)</li>
+                <li>A pillow that reminds you, at regular intervals, that you're sleeping</li>
+                <li>Captcha but for appliances, like your refrigerator </li>
+                <li>Dog translator app (but only says "Hi!" as response) </li>
+              </ul>
+          
+          </article>
+        </div> 
+
+        <div class="blog-container" id="perfectly-clear">
+          <article>
+            <h2>Perfectly Clear</h2>
+            <p class="post-meta">Published on Oct. 15, 2026</p>
+            <p><strong>Prompt:</strong> Start with this - It's all perfectly clear now. </p>
+            <p>"It's all perfectly clear now!" I thought to myself, as I watched the flames engulf my smartphone. Not only should I be more careful about buying cheap electronics, but also do I really need any of these material things in my life? For the first time in a while I felt a sense of pure relief. No more tracking. No more of this attention-seeking evil rectangle from hell. I will miss all of the photos that I never backed up in the cloud. Maybe for a bit. To be honest, looking back, I never re-visited them much anyway. They existed more as a sort of artifact, some proof that sometimes I <em>do</em> leave my house and take pictures of various plants and murals and roaming wildlife. Hardly ever of people though - photographing others of my own kind is always too much to deal with. A plant never gave a fuck if it's in the right lighting or that I took a photo of it in the first place. Upon reflection, I probably should have taken more photos of my loved ones. Nevertheless here I am, looking back at this tiny time-sucking vortex of stress that is now thoroughly charred, and I am overjoyed because now I have clarity. </p>
+          </article>
+        </div>
+
+        <div class="blog-container" id="writing">
+          <article>
+            <h2>Writing Prompts</h2>
+            <p class="post-meta">Published on Oct. 15, 2026</p>
+            <p>Last spring, I took a writing class for therapy. It was surprisingly effective, and I was surprised at how open and creative I could be. So, I'm going to try something like that here. I have added a button to this site that links to the "Writing Prompt of the Day" (although it just appears to be a random prompt generator, no matter what day it is). I will make a post that displays the prompt I got, and what the result (ie. writing) of that ends up being. I very likely won't do this every day, and will probably fall off after a while, but I'm hoping to make at least something of this. </p>
+          </article>
+        </div>
+
+        <div class="blog-container" id="why">
+          <article>
+            <h2>Why?</h2>
+            <p class="post-meta">Published on Oct. 14, 2026</p>
+            <p>So far, this is .. pretty empty. I have been dabbling in various ideas for web design but I've always just wanted a blog. What I'd put in this blog? Not sure yet. I think the way it goes is that if I'm able to keep up enough with something, it will just mutate into something. Hopefully that something is enjoyable to someone.</p>
+            <p>I have been obsessed with web development for a few weeks now. When the hyperfocus ends I may forget about this website but until then, I'll just post some of my writing here eventually.</p>
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <footer>
+      <p>&#xA9; 2026 lmlack. All rights reserved.</p>
+    </footer>
+
+    <script>
+
+      var greetings = ['Hello traveler!', 'Welcome to the None-der-dome!', 'Omg you found my website!'];
+      var greetingEl = document.getElementById('greeting');
+      if (greetingEl) {
+        greetingEl.innerHTML = '<strong>' + greetings[Math.floor(Math.random() * greetings.length)] + '</strong>';
+      }
+
+
+      var todayEl = document.getElementById('today');
+      if (todayEl) {
+        todayEl.innerText = new Date().toLocaleDateString();
+      }
+
+      function generatePrompt() {
+        var prompts = [
+          "Start with this - It's all perfectly clear now.",
+          "The static on the radio suddenly started forming words.",
+          "They found a door in the basement that wasn't on the original blueprints.",
+          "Write about a character who can only tell the truth after midnight.",
+          "The coffee shop was completely empty, except for a notebook left open to page 17.",
+          "We only had three hours before the atmospheric pressure dropped completely.",
+          "A handwritten letter arrives, dated exactly ten years into the future.",
+          "Every plant in the house turned to face the same wall overnight.",
+          "Write about the last thing you lost and never found.",
+          "The neighbor's dog keeps bringing back things that belong to you.",
+          "Start with this - I should have read the fine print.",
+          "Describe your childhood bedroom from the point of view of the ceiling.",
+          "The power goes out and the whole street steps outside at once.",
+          "A stranger at the bus stop knows your name.",
+          "Write a letter to someone you'll never send it to.",
+          "The map was accurate, except for one town that didn't exist.",
+          "Start with this - Nobody warned me it would be this quiet.",
+          "You wake up and every clock in the house shows a different time.",
+          "Write about a meal that tasted exactly like a memory.",
+          "The thrift store sweater still has a note in the pocket.", 
+          "Describe your last dream as if it happened to you on your way to work.", 
+          "Include these words: green, whiplash, organic, skyscraper", 
+          "You have random moments where you know someone's future as you're talking to them.", 
+          "Describe the experience of traveling to a foreign country.", 
+          "Add a modern twist to your favorite fairy tale or fable.", 
+          "Write a story as if you were a character from the past who can see modern life in their dreams."
+        ];
+        var randomPrompt = prompts[Math.floor(Math.random() * prompts.length)];
+        var box = document.getElementById('promptBox');
+        if (box) {
+          box.innerText = randomPrompt;
+          box.style.display = 'block';
+        }
+      }
+
+      // 4. background sky (disabled)
+      // function changeSky() {
+      //   document.body.classList.toggle('alt-sky');
+      // }
+    </script>
+  </body>
+</html>
+
+
+
+
